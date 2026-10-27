@@ -287,4 +287,19 @@ html.lenis body {
   will-change: transform;
 }
 
+/* Hide Netlify Badge & Feedback Drawer */
+#netlify-badge,
+.netlify-badge,
+[data-netlify-deploy-preview],
+[data-netlify-drawer],
+#netlify-drawer,
+div[class*="netlify-badge"],
+iframe[src*="netlify"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+
 
