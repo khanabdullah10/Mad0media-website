@@ -1,0 +1,290 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'National-Regular';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/national-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'National-Medium';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/national-medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Futura ND Condensed';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/FuturaNDCn-ExtraBold.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'PP Editorial New';
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url('/fonts/PPEditorialNew-Ultralight.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'PP Editorial New';
+  font-style: italic;
+  font-weight: 200;
+  font-display: swap;
+  src: url('/fonts/PPEditorialNew-UltralightItalic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Neue Haas Grotesk Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/NeueHaasGrotDisp-55Roman.otf') format('opentype');
+}
+
+
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+  --pink: #FE3EB4;
+}
+
+html {
+  overflow-x: clip;
+}
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'National-Regular', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow-x: clip;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'National-Medium', 'National-Regular', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Banner video sizing - clean hero banner fit */
+.home-video-wrap {
+  background: #000000;
+}
+.home-video-wrap video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
+/* Custom transitions and animations identical to Mad O Media */
+.tab-detials {
+  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-ticker {
+  animation: ticker 25s linear infinite;
+}
+
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
+
+/* Photogenic Text Shimmer and Marquee Animations */
+@keyframes photogenicShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes marqueeLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marqueeRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-marquee-left {
+  animation: marqueeLeft 35s linear infinite;
+}
+
+.animate-marquee-right {
+  animation: marqueeRight 35s linear infinite;
+}
+
+.animate-marquee-left:hover,
+.animate-marquee-right:hover {
+  animation-play-state: paused;
+}
+
+.photogenic-text-gradient {
+  background: linear-gradient(
+    90deg,
+    #5a98cb 0%,
+    #8fb9d8 15%,
+    #d8e7f2 28%,
+    #ffffff 38%,
+    #f2a668 50%,
+    #e86524 68%,
+    #f39c12 82%,
+    #f16524 92%,
+    #5a98cb 100%
+  );
+  background-size: 200% auto;
+  animation: photogenicShimmer 8s ease-in-out infinite alternate;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Vertical scroll animation for SocialMinds cards */
+@keyframes scrollUp {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+@keyframes scrollDown {
+  0% { transform: translateY(-50%); }
+  100% { transform: translateY(0); }
+}
+
+.animate-scroll-up {
+  animation: scrollUp 28s linear infinite;
+}
+
+.animate-scroll-down {
+  animation: scrollDown 28s linear infinite;
+}
+
+.animate-scroll-up:hover,
+.animate-scroll-down:hover {
+  animation-play-state: paused;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #222222;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FE3EB4;
+}
+
+/* Lenis Smooth Scroll Configuration (Billion Dollar Boy style) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Mad O Media Authentic fadeInLeft on-load/scroll animation */
+@keyframes fadeInLeftMadOMedia {
+  0% {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-social-fade-in-left {
+  animation: fadeInLeftMadOMedia 1.25s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* Horizontal Awards Marquee (BDB Hero) */
+@keyframes awardsMarquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-awards-marquee {
+  display: flex;
+  width: max-content;
+  animation: awardsMarquee 32s linear infinite;
+}
+
+.animate-awards-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Vertical Creator Reel (BDB Hero) */
+@keyframes verticalReel {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
+.animate-vertical-reel {
+  animation: verticalReel 50s linear infinite;
+}
+
+.animate-vertical-reel:hover {
+  animation-play-state: paused;
+}
+
+/* Our Process Billion Dollar Boy Style Marquee */
+@keyframes processMarquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-process-marquee {
+  display: flex;
+  width: max-content;
+  animation: processMarquee 85s linear infinite !important;
+  will-change: transform;
+}
+
+
