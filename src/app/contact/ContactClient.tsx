@@ -6,6 +6,7 @@ import { Mail, MapPin, Phone, Send, CheckCircle2, Sparkles, ArrowRight } from "l
 export function ContactClient() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,20 +19,20 @@ export function ContactClient() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrorMsg(null);
 
     try {
       const payload = {
-        _subject: `New Contact Inquiry from ${formData.name} - MAD O MEDIA`,
-        _template: "table",
-        _captcha: "false",
         name: formData.name,
         email: formData.email,
         company: formData.company || "Not provided",
-        interest: formData.office,
+        service: formData.office,
+        budget: formData.budget,
         message: formData.message,
+        source: "Contact Page (/contact)",
       };
 
-      await fetch("https://formsubmit.co/ajax/info@mad0media.com", {
+      const response = await fetch("/api/contact.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,10 +41,27 @@ export function ContactClient() {
         body: JSON.stringify(payload),
       });
 
-      setSubmitted(true);
-    } catch {
-      // Offline or static fallback
-      setSubmitted(true);
+      let result: any = null;
+      try {
+        result = await response.json();
+      } catch {
+        if (process.env.NODE_ENV !== "production") {
+          setSubmitted(true);
+          return;
+        }
+      }
+
+      if (response.ok && result?.success) {
+        setSubmitted(true);
+      } else {
+        setErrorMsg(
+          result?.error ||
+          "Unable to send inquiry at this moment. Please email info@mad0media.com or contact us via WhatsApp."
+        );
+      }
+    } catch (err) {
+      console.error("Submission error:", err);
+      setErrorMsg("Network error. Please try again or reach us directly at info@mad0media.com or WhatsApp.");
     } finally {
       setIsSubmitting(false);
     }
@@ -97,6 +115,7 @@ export function ContactClient() {
                 <button
                   onClick={() => {
                     setSubmitted(false);
+                    setErrorMsg(null);
                     setFormData({ name: "", email: "", company: "", office: "Mumbai", budget: "Custom Project", message: "" });
                   }}
                   className="text-xs text-zinc-400 hover:text-white underline underline-offset-4 transition-colors"
@@ -175,6 +194,12 @@ export function ContactClient() {
                   className="w-full px-4 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-brand-neon transition-colors resize-none"
                 />
               </div>
+
+              {errorMsg && (
+                <div className="p-3.5 rounded-xl bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs font-medium">
+                  {errorMsg}
+                </div>
+              )}
 
               <button
                 type="submit"

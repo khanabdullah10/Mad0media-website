@@ -12,6 +12,7 @@ interface ContactDrawerProps {
 export function ContactDrawer({ isOpen, onClose }: ContactDrawerProps) {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,21 +25,20 @@ export function ContactDrawer({ isOpen, onClose }: ContactDrawerProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrorMsg(null);
 
     try {
       const payload = {
-        _subject: `New Project Brief from ${formData.name} (${formData.company || "Company not specified"})`,
-        _template: "table",
-        _captcha: "false",
         name: formData.name,
         email: formData.email,
         company: formData.company || "Not provided",
         service: formData.service,
         budget: formData.budget,
         message: formData.message || "No specific message provided",
+        source: "Slide-out Project Brief Drawer",
       };
 
-      await fetch("https://formsubmit.co/ajax/info@mad0media.com", {
+      const response = await fetch("/api/contact.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,10 +47,27 @@ export function ContactDrawer({ isOpen, onClose }: ContactDrawerProps) {
         body: JSON.stringify(payload),
       });
 
-      setSubmitted(true);
-    } catch {
-      // Graceful fallback for static GitHub deployment
-      setSubmitted(true);
+      let result: any = null;
+      try {
+        result = await response.json();
+      } catch {
+        if (process.env.NODE_ENV !== "production") {
+          setSubmitted(true);
+          return;
+        }
+      }
+
+      if (response.ok && result?.success) {
+        setSubmitted(true);
+      } else {
+        setErrorMsg(
+          result?.error ||
+          "Unable to send brief right now. Please email info@mad0media.com or contact us on WhatsApp."
+        );
+      }
+    } catch (err) {
+      console.error("Submission error:", err);
+      setErrorMsg("Network error. Please try again or reach us directly at info@mad0media.com.");
     } finally {
       setIsSubmitting(false);
     }
@@ -113,6 +130,7 @@ export function ContactDrawer({ isOpen, onClose }: ContactDrawerProps) {
                   <button
                     onClick={() => {
                       setSubmitted(false);
+                      setErrorMsg(null);
                       onClose();
                     }}
                     className="mt-4 px-6 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold"
@@ -210,6 +228,12 @@ export function ContactDrawer({ isOpen, onClose }: ContactDrawerProps) {
                       className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-brand-neon transition-colors resize-none"
                     />
                   </div>
+
+                  {errorMsg && (
+                    <div className="p-3.5 rounded-xl bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs font-medium">
+                      {errorMsg}
+                    </div>
+                  )}
 
                   <button
                     type="submit"
