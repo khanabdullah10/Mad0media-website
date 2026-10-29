@@ -41,3 +41,17 @@ ErrorDocument 404 /404.html
   ExpiresByType text/css "access plus 1 month"
   ExpiresByType application/javascript "access plus 1 month"
 </IfModule>
+
+# Ensure HTML & dynamic endpoints are always freshly validated
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  <FilesMatch "\.php$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+  </FilesMatch>
+</IfModule>
